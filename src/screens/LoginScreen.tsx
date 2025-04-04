@@ -38,34 +38,46 @@ const LoginScreen = ({navigation}:any) => {
             value={password}
             onChangeText={setPassword}
         />
-        <Button title="Ingresar" onPress={manejarLogin} />
+        <Button title="Ingresar" onPress={manejarLogin} color="#ffcc00" />
     </View>
   )
 }
 
 const styles=StyleSheet.create({
-    container:{
+    container: {
         justifyContent: 'center',
-        padding:20,
-        flex:1
+        padding: 30,
+        flex: 1,
+        backgroundColor: '#f5f5f5', // Fondo claro y neutro
+        alignItems: 'center',
     },
-    title:{
-        fontSize: 24,
+    title: {
+        fontSize: 32,
         fontWeight: 'bold',
+        marginBottom: 40,
+        textAlign: 'center',
+        color: '#3b3b3b', // Color gris oscuro para el título
+        letterSpacing: 1.5,
+    },
+    input: {
+        padding: 14,
         marginBottom: 20,
-        textAlign: 'center'
-    },
-    input:{
-        padding: 10,
-        marginBottom: 10,
+        width: '100%',
+        borderRadius: 12,
+        backgroundColor: '#ffffff', // Fondo blanco para los inputs
+        borderColor: '#d1d1d1', // Bordes grises suaves
         borderWidth: 1,
-        borderColor: '#ccc'
+        color: '#3b3b3b', // Texto oscuro para mejor contraste
+        fontSize: 16,
     },
-    button:{
-        padding: 10,
-        backgroundColor: '#4CAF50',
-        marginTop: 20,
-    }
+    button: {
+        padding: 15,
+        backgroundColor: '#f5a623', // Naranja suave para el botón
+        width: '100%',
+        borderRadius: 12,
+        color: '#ffffff', // Texto blanco para contraste
+        fontSize: 18,
+    },
 })
 
 export default LoginScreen
