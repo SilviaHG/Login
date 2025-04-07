@@ -1,49 +1,70 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useState } from 'react'
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-const LoginScreen = ({navigation}:any) => {
+const LoginScreen = ({ navigation }: any) => {
     //estado para el usuario y contraseña
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     //funcion para validar y redirijir
 
-    const manejarLogin=() =>{
+    const manejarLogin = async() => {
         //validar campos vacios
-        if(!username  || !password ){
-            Alert.alert('Error','Por favor complete todos los campos')
+        if (!username || !password) {
+            Alert.alert('Error', 'Por favor complete todos los campos')
             return
         }
 
-        if(username === 'admin' && password === '1234'){
-            navigation.navigate('Home', {user:username });
-        }else{
-            Alert.alert('Error','Usuario o contraseña incorrectos')
+        try{
+            // Guardar el usuario en AsyncStorage (simulación de registro)
+            const userData = await AsyncStorage.getItem('user')
+            if (!userData) {
+                Alert.alert('Error', 'No hay usuario registrado')
+                return
+            }
+            const user = JSON.parse(userData);
+            if (username === user.name && password === user.password) {
+                navigation.navigate('Home', { user: username });
+                return
+            }else{
+                Alert.alert('Error', 'Usuario o contraseña incorrectos')
+                return
+            }
+        }catch (error) {
+            Alert.alert('Error', 'Error al obtener el usuario')
+            return;
         }
     }
 
-  return (
-    <View style={styles.container}>
-        <Text style={styles.title}>Iniciar Sesión</Text>
-        <TextInput
-            style={styles.input}
-            placeholder="Usuario"
-            value={username}
-            onChangeText={setUsername}
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
-        />
-        <Button title="Ingresar" onPress={manejarLogin} color="#ffcc00" />
-    </View>
-  )
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Iniciar Sesión</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Usuario"
+                value={username}
+                onChangeText={setUsername}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}
+            />
+            <Button title="Ingresar" onPress={manejarLogin} color="#ffcc00" />
+
+            <TouchableOpacity onPress={() =>navigation.navigate('Register')} >
+                <Text style={styles.registerText} >¿No tienes cuenta? Registrate</Text>
+            </TouchableOpacity>
+        </View>
+
+
+    )
 }
 
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         padding: 30,
@@ -78,6 +99,12 @@ const styles=StyleSheet.create({
         color: '#ffffff', // Texto blanco para contraste
         fontSize: 18,
     },
+    registerText: {
+        marginTop: 20,
+        textAlign: 'center',
+        color: '#0066cc',
+        textDecorationLine: 'underline'
+    }
 })
 
 export default LoginScreen
