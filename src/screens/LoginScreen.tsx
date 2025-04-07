@@ -6,33 +6,32 @@ const LoginScreen = ({ navigation }: any) => {
     //estado para el usuario y contraseña
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
 
     //funcion para validar y redirijir
 
-    const manejarLogin = async() => {
+    const manejarLogin = async () => {
         //validar campos vacios
         if (!username || !password) {
             Alert.alert('Error', 'Por favor complete todos los campos')
             return
         }
 
-        try{
+        try {
             // Guardar el usuario en AsyncStorage (simulación de registro)
-            const userData = await AsyncStorage.getItem('user')
-            if (!userData) {
-                Alert.alert('Error', 'No hay usuario registrado')
-                return
-            }
-            const user = JSON.parse(userData);
-            if (username === user.name && password === user.password) {
-                navigation.navigate('Home', { user: username });
-                return
-            }else{
+            const userData = await AsyncStorage.getItem('users') ?? '[]'
+            const users = JSON.parse(userData);
+            const user = users.find((u: any) => u.username === username && u.password === password);
+            if (user) {
+                await AsyncStorage.setItem('user', JSON.stringify(user));
+                navigation.navigate('Home', { user: user.username });
+            } else {
                 Alert.alert('Error', 'Usuario o contraseña incorrectos')
-                return
+                return;
             }
-        }catch (error) {
-            Alert.alert('Error', 'Error al obtener el usuario')
+
+        } catch (error) {
+            Alert.alert('Error', 'No se pudo validar el usuario')
             return;
         }
     }
@@ -55,7 +54,7 @@ const LoginScreen = ({ navigation }: any) => {
             />
             <Button title="Ingresar" onPress={manejarLogin} color="#ffcc00" />
 
-            <TouchableOpacity onPress={() =>navigation.navigate('Register')} >
+            <TouchableOpacity onPress={() => navigation.navigate('Register')} >
                 <Text style={styles.registerText} >¿No tienes cuenta? Registrate</Text>
             </TouchableOpacity>
         </View>
