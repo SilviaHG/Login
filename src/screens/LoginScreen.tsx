@@ -20,7 +20,7 @@ const LoginScreen = ({ navigation }: any) => {
         try {
             // Guardar el usuario en AsyncStorage (simulación de registro)
             const userData = await AsyncStorage.getItem('users') ?? '[]'
-            const users = JSON.parse(userData);
+            const users = userData ? JSON.parse(userData) : []
             const user = users.find((u: any) => u.username === username && u.password === password);
             if (user) {
                 await AsyncStorage.setItem('user', JSON.stringify(user));
